@@ -1,0 +1,101 @@
+A1. Query the current gas price in wei.Give the answer as an integer(not in hex).
+Answer:-    
+    (0x6c63a89e2)_16 = (29095528930)_10
+    ({
+        jsonrpc: "2.0",
+        method: "eth_gasPrice",
+        params: [],
+        id: 1,
+    })
+    {"jsonrpc":"2.0","id":1,"result":"0x6c63a89e2"}
+    
+
+A2. Query tyhe current latest block number (converted to decimal).
+Answer:-    
+    (0x113f595)_16 = (18085269)_10
+    ({
+        jsonrpc: "2.0",
+        method: "eth_blockNumber",
+        params: [],
+        id: 1,
+    })
+    {"jsonrpc":"2.0","id":1,"result":"0x113f595"}
+
+A3. Find the balance(In Integer) of the account of a given address. 0xBaF6dC2E647aeb6F510f9e318856A1BCd66C5e19
+Answer:-    
+    2.216223461626714 Ether
+    ({
+        jsonrpc: "2.0",
+        method: "eth_getBalance",
+        params: [address, "latest"], // "latest" for the most recent block
+        id: 1,
+    })
+    {"jsonrpc":"2.0","id":1,"result":"0x1ec19b7f0d2596c2"}
+
+A4. Query the information about a transaction requested by transaction hash “0xdcae4a84a5780f62f18a9afb07b3a7627b9a28aa128a76bfddec72de9a0c2606”.
+    Find Out:
+    I.   the number of transactions made by the sender prior to this one in the block. Give the answer as an integer.
+    II.  value transferred inWei(In Integer)
+    III. JSON RPC payload 
+    IV.  Response
+Answer:- 
+    JSON RPC Payload: {"jsonrpc":"2.0","method":"eth_getTransactionByHash","params":["0xdcae4a84a5780f62f18a9afb07b3a7627b9a28aa128a76bfddec72de9a0c2606"],"id":1}
+    Response: {
+        jsonrpc: '2.0',
+        id: 1,
+        result: {
+            accessList: [],
+            blockHash: '0x53d920959cf1ee6f569fcdeba03c9d91c54f4c34e893cd937536f7ae8c60be9a',
+            blockNumber: '0x1132aea',
+            chainId: '0x1',
+            from: '0xbaf6dc2e647aeb6f510f9e318856a1bcd66c5e19',
+            gas: '0x565f',
+            gasPrice: '0x4cc13ee7c',
+            hash: '0xdcae4a84a5780f62f18a9afb07b3a7627b9a28aa128a76bfddec72de9a0c2606',
+            input: '0x',
+            maxFeePerGas: '0x4cc13ee7c',
+            maxPriorityFeePerGas: '0x0',
+            nonce: '0xbf4a',
+            r: '0x3c54f1d468465af6d4ad737ca626399a3b8180a510479585873531b5cfe0443e',
+            s: '0x7dc4757678d30c50ce1932c9d0603274cfcb6719c64c0c1603834a43eadbf961',
+            to: '0x388c818ca8b9251b393131c08a736a67ccb19297',
+            transactionIndex: '0x73',
+            type: '0x2',
+            v: '0x0',
+            value: '0x6a3b3f81ce3ff3',
+            yParity: '0x0'
+        }
+    }
+    Number of transactions made by the sender prior to this one in the block: 48970
+    Value transferred in Wei: 29901491478085620
+
+A5. Find the number of peers connected currently to your Geth client(inInfura).
+    I. Answer(Integer),
+    II. JSON RPC payload,
+    III. Response
+
+    JSON RPC Payload: {"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}
+    Response: { jsonrpc: '2.0', id: 1, result: '0x64' }
+    Number of peers connected to your Geth client: 100
+
+A6. Query transaction receipt for the transaction with hash "0x5d692282381c75786e5f700c297def496e8e54f0a96d5a4447035f75085933cb".
+    Find out:
+    I. the block Number(integer),
+    II. block Hash,
+    III.cumulative Gas Used(integer),
+    IV.transaction Index(integer)
+
+    Block Number: 18033386
+    Block Hash: 0x53d920959cf1ee6f569fcdeba03c9d91c54f4c34e893cd937536f7ae8c60be9a
+    Cumulative Gas Used: 16298877
+    Transaction Index: 111
+
+A7. Find out the number of transactions in the block with the given block: 0x1132aea
+    I. Answer(Integer),
+    II. JSON RPC payload,
+    III. Response
+
+    Number of transactions in the block: 116
+    JSON RPC Payload: {"jsonrpc":"2.0","method":"eth_getBlockTransactionCountByNumber","params":["0x1132aea"],"id":1}
+    Response: { jsonrpc: '2.0', id: 1, result: '0x74' }
+    
