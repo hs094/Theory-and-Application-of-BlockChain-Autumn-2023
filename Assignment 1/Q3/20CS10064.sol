@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 //      20CS10064 - Subhajyoti Halder
 //      20CS30019 - Gitanjali Gupta
 //      20CS30023 - Hardik Pravin Soni
-//      20CS10047 - Priyanshi Dixit
+//      20CS30069 - Priyanshi Dixit
 
 contract TicketBooking {
     struct Buyer {
