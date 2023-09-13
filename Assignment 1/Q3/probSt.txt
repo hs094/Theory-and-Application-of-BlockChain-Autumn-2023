@@ -1,0 +1,40 @@
+We want to develop a smart contract for Movie Ticket Booking. Using this contract the movie theater owner (seller) can sell tickets for a movie. People can purchase the movie tickets by sending transactions to the contract. You have to write an “TicketBooking” contract.
+While deploying the smart contract, the owner of the contract specifies 2 parameters - the maxOccupancy (total number of tickets to sell) and the price of each ticket(in wei).
+Write a constructor as follows: (5 Marks)
+constructor(uint _quota, uint _price) {
+       owner = msg.sender;
+       numTicketsSold = 0;
+       quota = _quota;
+       price = _price;
+}
+In the smart contract, define a custom data type to represent a Buyer. The Buyer structure maintains information related to person who book for the movie including the amount paid, the number of tickets purchased and the email address. (3 Marks)
+The BuyersPaid variables maintains a mapping from the address of the buyer to the Buyer structure. (2 Marks)
+To buy tickets for the movie, a user can send transaction to the buyTicket function of the contract along with the user’s email address and number of tickets to buy. The user also sends a value equal to the total cost of the tickets along with the transaction. (10 Marks)
+The function buyTickets is defined as follows:
+● It has a function modifier “soldOut”, which check if all the movie tickets are sold out.
+function buyTicket(string memory email, uint numTickets) public payable soldOut {
+...
+}
+modifier soldOut() {
+       require(numTicketsSold < quota, "All tickets have been
+sold"); _;
+}
+● In the function, checks if the buyer is already bought a ticket for the movie.
+○ If already bought, update the number of tickets purchased by the user and the
+total amount paid.
+○ If not bought, add the user’s address to the “buyersPaid” list and store the user’s
+email address, the amount paid and the number of tickets purchased.
+● If the value sent by the user is more than the total cost of the tickets, the balance should
+be refunded.
+The amount paid by all the users for the tickets purchased is held in the contract account. The contract Seller (or benificiery) can withdraw the amount from the contract account by sending a transaction to the “withdrawFunds” functions. This function has a modifier “onlyOwner” to check if the transaction is sent by the owner. (5 Marks)
+modifier onlyOwner() { ..
+}
+function withdrawFunds() public onlyOwner { ...
+}
+function refundTicket(address buyer) public onlyOwner { ...
+}
+Additional Functions:
+In addition to the function, also write the following functions to debug and test the smart contract:
+Return the total amount paid by a buyer.
+function kill() public onlyOwner
+To kill the movie ticket booking event.
