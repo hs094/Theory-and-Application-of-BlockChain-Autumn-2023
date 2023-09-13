@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+// Contract ID: 0xA47d7B9ca783F026D303a7c8e2b07b942c9E7b04
+
 // Group Members:
 //      20CS10064 - Subhajyoti Halder
 //      20CS30019 - Gitanjali Gupta
@@ -46,15 +48,15 @@ contract TicketBooking {
         if (buyer.numTickets == 0) {
             buyer.email = email;
         }
-
+        uint net_price = numTickets * price;
         buyer.numTickets += numTickets;
-        buyer.totalPrice += msg.value;
+        buyer.totalPrice += net_price;
 
         numTicketsSold += numTickets;
 
         // Refund excess payment
         if (msg.value > (numTickets * price)) {
-            payable(msg.sender).transfer(msg.value - (numTickets * price));
+            payable(msg.sender).transfer(msg.value - net_price);
         }
     }
 
