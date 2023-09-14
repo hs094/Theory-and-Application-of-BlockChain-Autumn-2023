@@ -1,0 +1,11 @@
+C1. Movie Ticket Booking with Ethereum Smart Contract
+Answer:-
+    Smart Contract address: 
+        0xA47d7B9ca783F026D303a7c8e2b07b942c9E7b04
+    Owner address: 
+        0x9b3710f9b284eAC355F1721B00C381c626250439
+    
+    Contract:           "TicketBooking"
+    Solidity File:      "20CS10064.sol"
+    Compiler Version:   "0.8.0"
+    
