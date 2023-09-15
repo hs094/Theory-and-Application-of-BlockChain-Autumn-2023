@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// Contract ID: 0x1Ee58a8DA33712aeDdC80CEc89f7F82a5D76836d
+// Contract ID: 0xA47d7B9ca783F026D303a7c8e2b07b942c9E7b04
 
 // Group Members:
 //      20CS10064 - Subhajyoti Halder
@@ -42,19 +42,17 @@ contract TicketBooking {
     function buyTicket(string memory email, uint numTickets) public payable soldOut {
         require(numTickets > 0, "Number of tickets must be greater than 0");
         require(numTicketsSold + numTickets <= maxOccupancy, "Not enough tickets available");
-        uint net_price = numTickets * price;
-        require(msg.value >= net_price, "Insufficient Transfer amount");
 
         Buyer storage buyer = buyersPaid[msg.sender];
 
         if (buyer.numTickets == 0) {
             buyer.email = email;
         }
+        uint net_price = numTickets * price;
         buyer.numTickets += numTickets;
         buyer.totalPrice += net_price;
 
         numTicketsSold += numTickets;
-        
 
         // Refund excess payment
         if (msg.value > (numTickets * price)) {
@@ -65,10 +63,8 @@ contract TicketBooking {
     function refundTicket(address buyer) public onlyOwner { 
         Buyer storage B = buyersPaid[buyer];
         require(B.numTickets > 0, "Buyer has not purchased any tickets");
-        require(address(this).balance >= B.totalPrice, "Insufficient Balance");
 
         uint refundAmount = B.totalPrice;
-        numTicketsSold -= B.numTickets;
         B.totalPrice = 0;
         B.numTickets = 0;
 
