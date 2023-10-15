@@ -6,13 +6,28 @@
 - 20CS30069 - Priyanshi Dixit
 
 ## Instruction
-- **Create virtual environment**
+- **Clone fabric-sample repository**
 ```bash
-sudo pip install virtualenv      # This may already be installed
-virtualenv .env                  # Create a virtual environment
+curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
+./install-fabric.sh docker samples binary
 ```
-- **Run** start.sh **bash To Start Web Application**
+- **Replace the following files in the mentioned path**
 ```bash
-./start.sh                       # All neccessary library will be downloaded
+"app.js" : ./asset-transfer-private-data/application-javascript/app.js
+"assetTransfer.js" : ./asset-transfer-private-data/chaincode-typescript/src/assetTransfer.ts
 ```
-- **Open http://127.0.0.1:8000 in  your browser**
+- **Create the test network and a channel (from the test-network folder).**
+```bash
+sudo ./network.sh up createChannel -c mychannel -ca
+```
+- **Deploy the smart contract implementations (from the test-network folder).**
+```bash
+# To deploy the typescript chaincode implementation
+sudo ./network.sh deployCC -ccn private -ccp ../asset-transfer-private-data/chaincode-typescript/ -ccl typescript  -ccep "OR('Org1MSP.peer','Org2MSP.peer')" -cccg ../asset-transfer-private-data/chaincode-typescript/collections_config.json 
+```
+- **Run the application (from the asset-transfer-private-data folder)**
+```bash
+# To run the Javascript sample application
+cd application-javascript
+sudo npm install
+sudo node app.js
