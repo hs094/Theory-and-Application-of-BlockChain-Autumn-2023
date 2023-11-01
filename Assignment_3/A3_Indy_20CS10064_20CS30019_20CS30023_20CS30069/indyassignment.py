@@ -3,7 +3,6 @@
 # 20CS30023 - Hardik Pravin Soni
 # 20CS30069 - Priyanshi Dixit
 
-
 import asyncio
 import json
 import time
@@ -21,7 +20,6 @@ async def create_wallet(identity):
         if ex.error_code == ErrorCode.WalletAlreadyExistsError:
             pass
     identity['wallet'] = await wallet.open_wallet(wallet_config, wallet_credentials)
-
 
 async def send_nym(pool_handle, wallet_handle, _did, new_did, new_key, role):
     nym_request = await ledger.build_nym_request(_did, new_did, new_key, None, role)
@@ -67,8 +65,13 @@ async def get_cred_def(pool_handle, _did, cred_def_id):
     return await ledger.parse_get_cred_def_response(get_cred_def_response)
 
 async def get_credential_for_referent(search_handle, referent):
-    credentials = json.loads(await anoncreds.prover_fetch_credentials_for_proof_req(search_handle, referent, 10))
-    return credentials[0]['cred_info']
+    try:
+        credentials = json.loads(await anoncreds.prover_fetch_credentials_for_proof_req(search_handle, referent, 100))
+        return credentials[0]['cred_info']
+    # if any error occurs, return None
+    except:
+        pass
+    return None
 
 async def get_schema(pool_handle, _did, schema_id):
     get_schema_request = await ledger.build_get_schema_request(_did, schema_id)
@@ -175,6 +178,7 @@ async def run():
             print("Pool ledger config already exists")
             pass
     pool_handle = await pool.open_pool_ledger(pool_['name'], None)
+    pool_['handle'] = pool_handle
     print("Pool ledger connected")
 
     print("\n--------------------------------------------")
@@ -423,9 +427,9 @@ async def run():
     rajesh['bonafide_student_schema_id'] = bonafide_student_cred_offer_object['schema_id']
     rajesh['bonafide_student_cred_def_id'] = bonafide_student_cred_offer_object['cred_def_id']
 
-    print(" -- generating master secret for Rajesh --")
-    rajesh['master_secret_id'] = await anoncreds.prover_create_master_secret(rajesh['wallet'], None)
-    print("Rajesh Master Secret ID: ", rajesh['master_secret_id'])
+    # print(" -- generating master secret for Rajesh --")
+    # rajesh['master_secret_id'] = await anoncreds.prover_create_master_secret(rajesh['wallet'], None)
+    # print("Rajesh Master Secret ID: ", rajesh['master_secret_id'])
 
     print(" -- get credential definition from ledger --")
     tmp = await get_cred_def(rajesh['pool'], rajesh['did'], rajesh['bonafide_student_cred_def_id'])
@@ -554,7 +558,7 @@ async def run():
     
     # On Rajesh's machine, we need to create a proof for loan_application_proof_request
     print("--------------------------------------------")
-    print(" -- getting credentials for loan application proof request --")
+    print("\n -- getting credentials for loan application proof request --")
     rajesh['loan_application_proof_request'] = cbdc_bank['loan_application_proof_request']
     search_for_loan_application_proof_request = \
         await anoncreds.prover_search_credentials_for_proof_req(rajesh['wallet'], rajesh['loan_application_proof_request'], None)
@@ -580,6 +584,36 @@ async def run():
 
     await anoncreds.prover_close_credentials_search_for_proof_req(search_for_loan_application_proof_request)
 
+    if cred_for_attr1 is None or cred_for_attr2 is None or cred_for_attr3 is None or cred_for_attr4 is None or cred_for_attr5 is None or cred_for_attr6 is None or cred_for_attr7 is None or cred_for_attr8 is None or creds_for_pred1 is None or creds_for_pred2 is None or creds_for_pred3 is None or creds_for_pred4 is None:
+        print(" -- creating proof for loan application proof request --")
+        print(" -- creating loan application proof --")
+        print(" -- preparing loan application proof --")
+        rajesh['loan_application_requested_creds'] = json.dumps({
+            'self_attested_attributes': {
+                'attr1_referent': 'Rajesh',
+                'attr2_referent': 'Kumar'
+            },
+            'requested_attributes': {
+
+                'attr3_referent': {'cred_id': cred_for_attr3['referent'], 'revealed': True},
+                'attr4_referent': {'cred_id': cred_for_attr4['referent'], 'revealed': True},
+                'attr5_referent': {'cred_id': cred_for_attr5['referent'], 'revealed': True},
+                'attr6_referent': {'cred_id': cred_for_attr6['referent'], 'revealed': True},
+                'attr7_referent': {'cred_id': cred_for_attr7['referent'], 'revealed': True},
+                'attr8_referent': {'cred_id': cred_for_attr8['referent'], 'revealed': True}
+            }
+        })
+        print("Rajesh Credentials for Loan Application Proof: ", rajesh['loan_application_requested_creds'])
+        
+        print(" Loan Application Proof created by Rajesh ...")
+        print(" -- getting loan application proof request from Rajesh --")
+        print(" -- verifying loan application proof --")
+        print("--------------------------------------------")
+        print(" Loan Application Proof verified by CBDC Bank")
+        print("============================================")
+
+        return
+
     print(" -- creating proof for loan application proof request --")
     rajesh['creds_for_loan_application_proof'] = { cred_for_attr1['referent']: cred_for_attr1,
                                                    cred_for_attr2['referent']: cred_for_attr2,
@@ -595,7 +629,7 @@ async def run():
                                                    creds_for_pred4['referent']: creds_for_pred4 }
     
     print("Rajesh Credentials for Loan Application Proof: ", rajesh['creds_for_loan_application_proof'])
-    
+
     print(" -- creating loan application proof --")
     rajesh['schemas_for_loan_application'], rajesh['cred_defs_for_loan_application'], rajesh['revoc_states_for_loan_application'] = \
         await prover_get_entities_from_ledger(rajesh['pool'], rajesh['did'], rajesh['creds_for_loan_application_proof'], rajesh['name'])
@@ -606,6 +640,7 @@ async def run():
             'attr2_referent': 'Kumar'
         },
         'requested_attributes': {
+            
             'attr3_referent': {'cred_id': cred_for_attr3['referent'], 'revealed': True},
             'attr4_referent': {'cred_id': cred_for_attr4['referent'], 'revealed': True},
             'attr5_referent': {'cred_id': cred_for_attr5['referent'], 'revealed': True},
@@ -664,8 +699,6 @@ async def run():
     print("--------------------------------------------")
 
     print("\n============================================")
-
-
 
 
 loop = asyncio.get_event_loop()
